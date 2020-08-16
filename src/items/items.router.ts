@@ -20,7 +20,7 @@ itemsRouter.get("/", async (req: Request, res: Response) => {
   try {
     const items: Items = await ItemService.findAll();
 
-    res.status(200).send(items);
+    res.status(200).json({msg: 'Successfully retrieved item', data: items});
   } catch (e) {
     res.status(404).send(e.message);
   }
@@ -33,7 +33,7 @@ itemsRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     const item: Item = await ItemService.find(id);
 
-    res.status(200).send(item);
+    res.status(200).json({msg: 'Successfully retrieved item', data: item});
   } catch (e) {
     res.status(404).send(e.message);
   }
@@ -43,11 +43,11 @@ itemsRouter.get("/:id", async (req: Request, res: Response) => {
 
 itemsRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const item: Item = req.body.item;
+    const item: Item = req.body;
 
     const createdItem: Item = await ItemService.create(item);
 
-    res.status(201).json(createdItem);
+    res.status(201).json({msg: 'Item created', data: createdItem});
   } catch (e) {
     res.status(404).send(e.message);
   }
@@ -55,13 +55,14 @@ itemsRouter.post("/", async (req: Request, res: Response) => {
 
 // PUT items/
 
-itemsRouter.put("/", async (req: Request, res: Response) => {
+itemsRouter.put("/:id", async (req: Request, res: Response) => {
   try {
-    const item: Item = req.body.item;
+    const item: Item = req.body;
+    const id: number = parseInt(req.params.id, 10);
 
-    await ItemService.update(item);
+    const updatedItem: Item = await ItemService.update(id, item);
 
-    res.sendStatus(200);
+    res.status(200).json({msg: 'Item updated', data: updatedItem});
   } catch (e) {
     res.status(500).send(e.message);
   }
@@ -74,7 +75,7 @@ itemsRouter.delete("/:id", async (req: Request, res: Response) => {
     const id: number = parseInt(req.params.id, 10);
     await ItemService.remove(id);
 
-    res.sendStatus(200);
+    res.status(200).json({msg: 'Item deleted'});
   } catch (e) {
     res.status(500).send(e.message);
   }

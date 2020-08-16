@@ -3,43 +3,24 @@
  */
 import { Item } from "./item.interface";
 import { Items } from "./items.interface";
-
-/**
- * In-Memory Store
- */
-const items: Items = {
-  1: {
-    id: 1,
-    name: "Burger",
-    price: 5.99,
-    description: "Tasty",
-    image: "https://cdn.auth0.com/blog/whatabyte/burger-sm.png",
-  },
-  2: {
-    id: 2,
-    name: "Pizza",
-    price: 2.99,
-    description: "Cheesy",
-    image: "https://cdn.auth0.com/blog/whatabyte/pizza-sm.png",
-  },
-  3: {
-    id: 3,
-    name: "Tea",
-    price: 1.99,
-    description: "Informative",
-    image: "https://cdn.auth0.com/blog/whatabyte/tea-sm.png",
-  },
-};
+import { db } from "../db/db-config";
+import {
+  findAllItems,
+  findOneItem,
+  createItem,
+  updateItem,
+  deleteItem
+} from "../db/queries";
 
 /**
  * Service Methods
  */
 export const findAll = async (): Promise<Items> => {
-  return items;
+  return db.manyOrNone(findAllItems);
 };
 
 export const find = async (id: number): Promise<Item> => {
-  const record: Item = items[id];
+  const record: Item | null = await db.oneOrNone(findOneItem, [id]);
 
   if (record) {
     return record;
@@ -49,30 +30,36 @@ export const find = async (id: number): Promise<Item> => {
 };
 
 export const create = async (newItem: Item): Promise<Item> => {
-  const id = new Date().valueOf();
-  items[id] = {
-    ...newItem,
-    id,
-  };
+  const { name, description, price, image } = newItem;
+  const item: Item = await db.one(createItem, [
+    name,
+    price,
+    description,
+    image,
+  ]);
+  return item;
+};
+
+export const update = async (
+  itemId: number,
+  updatedItem: Item
+): Promise<Item> => {
+  const item: Item | null = await db.oneOrNone(findOneItem, [itemId]);
+  if (!item) {
+    throw new Error("No record found to update");
+  }
+  const editedItem: Item = { ...item, ...updatedItem };
+  const { name, description, price, image } = editedItem;
+  const newItem: Item = await db.one(updateItem, [
+    name,
+    price,
+    description,
+    image,
+    itemId
+  ]);
   return newItem;
 };
 
-export const update = async (updatedItem: Item): Promise<void> => {
-  if (items[updatedItem.id]) {
-    items[updatedItem.id] = updatedItem;
-    return;
-  }
-
-  throw new Error("No record found to update");
-};
-
 export const remove = async (id: number): Promise<void> => {
-  const record: Item = items[id];
-
-  if (record) {
-    delete items[id];
-    return;
-  }
-
-  throw new Error("No record found to delete");
+  await db.none(deleteItem, [id]);
 };

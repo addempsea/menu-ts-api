@@ -1,8 +1,7 @@
-import pgPromise from 'pg-promise';
-import * as dotenv from "dotenv";
+import "dotenv/config";
 import Promise from 'bluebird';
+import pgPromise from 'pg-promise';
 
-dotenv.config();
 const pgp = pgPromise({ promiseLib: Promise, noLocking: true })
 
 const dbUrl: string = String(process.env.DATABASE_URL as string)

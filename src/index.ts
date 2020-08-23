@@ -1,15 +1,15 @@
 /**
  * Required External Modules
  */
-import * as dotenv from "dotenv";
-import express from "express";
+import "dotenv/config";
 import cors from "cors";
 import helmet from "helmet";
+import express from "express";
+import { userRouter } from "./users/user.router";
 import { itemsRouter } from "./items/items.router";
 import { errorHandler } from "./middleware/error.middleware";
-import {notFoundHandler} from "./middleware/notFound.middleware";
-
-dotenv.config();
+import { notFoundHandler } from "./middleware/notFound.middleware";
+import { authenticate, checkIfUserExists } from "./middleware/auth.middleware";
 
 /**
  * App Variables
@@ -28,7 +28,8 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use("/items", itemsRouter);
+app.use("/items", authenticate, itemsRouter);
+app.use("/user", userRouter);
 app.use(errorHandler);
 app.use(notFoundHandler);
 

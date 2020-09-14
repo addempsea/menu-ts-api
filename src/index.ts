@@ -9,7 +9,7 @@ import { userRouter } from "./users/user.router";
 import { itemsRouter } from "./items/items.router";
 import { errorHandler } from "./middleware/error.middleware";
 import { notFoundHandler } from "./middleware/notFound.middleware";
-import { authenticate, checkIfUserExists } from "./middleware/auth.middleware";
+import { authenticate } from "./middleware/auth.middleware";
 
 /**
  * App Variables
@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use("/items", authenticate, itemsRouter);
-app.use("/user", userRouter);
+app.use("/auth", userRouter);
 app.use(errorHandler);
 app.use(notFoundHandler);
 

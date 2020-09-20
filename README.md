@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/addempsea/menu-ts-api/badge/master)](https://www.codefactor.io/repository/github/addempsea/menu-ts-api/overview/master)
+
 ## Project setup
 ```
 npm install

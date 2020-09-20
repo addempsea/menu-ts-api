@@ -10,7 +10,7 @@ export const createItem: string = `
     ) VALUES ($1, $2, $3, $4, $5) RETURNING *;
 `;
 export const updateItem: string = `
-    UPDATE 
+    UPDATE
         item
     SET
         name=$1,
@@ -36,7 +36,7 @@ export const createUser: string = `
 export const findOneUser: string = 'SELECT * FROM user_info WHERE username=$1';
 export const findUserByUsernameEmail: string = 'SELECT * FROM user_info WHERE username=$1 OR email=$2';
 export const updateUser: string = `
-    UPDATE 
+    UPDATE
         user_info
     SET
         username=$1,

@@ -10,7 +10,7 @@ const registerUser = async (req: Request, res: Response) => {
 
     res.status(201).json({ msg: "User created", data: createdUser });
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(500).send(e.message);
   }
 };
 
@@ -22,7 +22,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     res.status(201).json({ msg: "User logged in", data: createdUser });
   } catch (e) {
-    res.status(404).send(e.message);
+    res.status(500).send(e.message);
   }
 };
 
